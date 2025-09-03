@@ -13,11 +13,11 @@ editor_options:
 ```{r}
 # Cargar liberias y paquetes
 
-#install.packages("haven") # Archivos .dta
-#install.packages("plm")
-#install.packages("skimr")
-#install.packages("dplyr")
-#install.packages("ggplot2")
+install.packages("haven") # Archivos .dta
+install.packages("plm")
+install.packages("skimr")
+install.packages("dplyr")
+install.packages("ggplot2")
 
 library(haven)
 library(plm)
@@ -26,56 +26,119 @@ library(skimr)
 library(dplyr)
 library(ggplot2)
 
-
 # Leer archivo .dta
-#data <- read_dta("oil_windfall_sin10percV.dta")
-
-# Leer archivo .dta
-data <- read_dta("C:/1. MECA/2025/EVALUACIACÓN DE IMPACTO- Raachid Raaj/Taller 2- Variables instrumentales/oil_windfall_sin10percV.dta")
+data <- read_dta("oil_windfall_sin10perc.dta")
+set.seed(201613424)
 ```
 
 ### 1. Ecuaciones
 
 ##### Especificación en niveles (OLS, Ecuación 1)
 
- $$W_{m}= δ_1​+θ1​Rm​+Xm′_ρ1​+um_1​$$ 
+$$W_{m}= δ_1​+θ_1​R_m​+X_mρ_1​+u_{m1}​$$
 
-Donde 
-$W_m$: Outcome o variable dependiente. Representa los resultados de interés en el municipio m (por ejemplo, indicadores de bienestar, desarrollo económico, etc.). 
-
-$R_m$: Regalías recibidas por el municipio m.
-
-$X_m$: Controles geográficos y estructurales: latitud, longitud, indicador si el municipio está en la costa, distancias a capital federal y estatal, dummy de capital estatal, efectos fijos estatales.
-
-$um_1$ Término de error.
+En este modelo, $W_m$ representa el conjunto de resultados económicos a
+nivel de AMC que incluyen el gasto reportado en distintas partidas de
+presupuesto a nivel municipal, provisión de bienes y servicios públicos,
+transferencias, ingresos de los hogares y tasas de pobreza. A su vez,
+$R_m$ corresponde a una medida de los ingresos municipales y es la
+variable explicativa principal. Finalmente, $X_m$ reúne distintas
+características geográficas de cada municipio, incluyendo su latitud y
+longitud, si está ubicado en la costa, la distancia a las capitales
+federal y estatal, un indicador de si es capital estatal, así como
+efectos fijos por estado.
 
 ##### Especificación VI (OLS, Ecuación 3 y 4)
 
-$$Ym,1970=δ3+η0 Qm,2000+Xm′ρ3+um3$$
+$$Y_{m,1970}=δ_3+η_0 Q_{m,2000}+X'_mρ_3+ w_{m3}$$
 
-•	$Ym,1970$: Outcome en 1970 del municipio m. Se usa como “placebo” para probar que el instrumento no estaba correlacionado con condiciones socioeconómicas históricas.
-•	$Qm,2000$: Producción petrolera en el año 2000 en el municipio m. Es el instrumento para regalías Rm.
-•	$Xm′$: Vector de controles geográficos y estructurales (latitud, longitud, dummy costa, distancias a capitales, dummy capital estatal, efectos fijos estatales).
-•	$um_3$: Término de error.
+Donde $$Y_{m,1970}$$ es el resultado socioeconómico en AMC para el año
+1970 y se usa como “placebo” para probar que el instrumento no estaba
+correlacionado con condiciones socioeconómicas históricas,
+$$Q_{m,2000}$$ hace referencia a la producción petrolera en el año 2000
+en el municipio $m$, el cual funciona como el instrumento para regalías
+y $Xm′$ es el vector de controles geográficos y estructurales como
+latitud, longitud, si es costa, distancias a capitales, si es capital
+estatal junto con efectos fijos estatales.
 
+$$Y_{m,2002} = δ_4+η_4Q_{m,2002}+X'_mρ_4+w_{m4}$$
 
-$$Ym,2002 = δ3+η0 Qm,2002+Xm′ρ3+um3$$
+Donde $Y_{m,1970}$ es el Producto Interno Bruto en 2002 del municipio
+$m$, $Q_{m,2000}$ es la producción petrolera en el año 2000 en el
+municipio $m$. y $X'_m$ es el vector de controles geográficos y
+estructurales.
 
-•	$Ym,1970$: Outcome en 2002 del municipio m. (indicadores de bienestar, acceso a servicios, etc.). Es la variable dependiente principal.
-•	$Qm,2000$: Producción petrolera en el año 2000 en el municipio m. Es el instrumento para regalías Rm.
-•	$Xm′$: Vector de controles geográficos y estructurales (latitud, longitud, dummy costa, distancias a capitales, dummy capital estatal, efectos fijos estatales).
-•	$um_3$: Término de error.
+### 2. Intuición metodológica 
 
+##### ¿Cuál es la intuición detrás de implementar Variables Instrumentales (VI) en vez de Mínimos Cuadrados Ordinarios (MCO)? En este escenario: Mencione al menos un sesgo del cual podríamos estar preocupados si interpretamos los efectos por MCO de manera causal. ¿Cuáles son los supuestos necesarios para que VI nos permita recuperar el efecto causal de interés? ¿Son creíbles los supuestos? Argumenten.
 
-### 2. ¿Cuál es la intuición detrás de implementar Variables Instrumentales (VI) en vez de Mínimos Cuadrados Ordinarios (MCO)? En este escenario: Mencione al menos un sesgo del cual podríamos estar preocupados si interpretamos los efectos por MCO de manera causal. ¿Cuáles son los supuestos necesarios para que VI nos permita recuperar el efecto causal de interés? ¿Son creíbles los supuestos? Argumenten.
+La razón principal para emplear el método de variable instrumental es
+que una estimación por Mínimos Cuadrados Ordinarios (MCO) podría arrojar
+resultados sesgados porque los ingresos municipales no son estrictamente
+exógenos. Municipios con poblaciones de mayores ingresos o con mayor
+capacidad institucional pueden mostrar al mismo tiempo mejores
+indicadores socioeconómicos, lo cual impediría identificar un efecto
+puramente causal. Existe también la posibilidad de causalidad inversa en
+la medida en que condiciones socioeconómicas más favorables permiten
+recaudar más ingresos fiscales. Además, no puede descartarse la
+influencia de factores no observados, como la calidad de las
+instituciones locales o la existencia de redes clientelares, que
+expliquen simultáneamente mayores ingresos y peores resultados en la
+provisión de bienes y servicios públicos.
 
-En este paper, se implementa variables instrumentales (IV) porque los estimadores OLS estarían sesgados por endogeneidad (municipios con regalías podrían ser distintos en riqueza, gobernanza o historia). El instrumento (geología + ley del petróleo) es relevante porque determina qué municipios reciben regalías, y es exógeno porque no debería afectar el bienestar directamente, salvo a través de los ingresos municipales. Los supuestos de IV son en gran medida creíbles dado el diseño institucional brasileño y las pruebas de balance histórico que hacen los autores.
+Ante estos problemas los autores recurren a la producción de petróleo
+como instrumento de los ingresos municipales. La variación geográfica en
+la producción se interpreta como un shock exógeno que incrementa los
+recursos locales mediante regalías y permite recuperar el efecto causal
+de esos ingresos extraordinarios sobre el gasto público y los resultados
+sociales.
 
-###  3. En una tabla, presenten los resultados de estimar la primera etapa de la metodología de Variables Instrumentales. ¿Es el instrumento relevante y fuerte? Contesten esta pregunta usando los dos criterios recomendados en la clase magistral.
+La validez de esta estrategia depende del cumplimiento de dos
+condiciones. La primera es la relevancia, que implica que la producción
+de petróleo $Q_m$​ esté correlacionada con los ingresos municipales
+$$R_m$$​. Los autores muestran evidencia a favor de este punto al
+encontrar que un real adicional de producción petrolera se asocia con un
+incremento promedio de tres centavos en los ingresos municipales. La
+segunda es la exclusión, que exige que la producción de petróleo afecte
+los resultados socioeconómicos $W_m$ únicamente a través de los ingresos
+municipales. Este supuesto se sostiene en el hecho de que los campos
+petroleros se ubican costa afuera, son operados por Petrobras y utilizan
+insumos y mano de obra altamente especializados que no provienen de los
+municipios beneficiarios, lo que reduce la posibilidad de un impacto
+directo sobre la provisión de servicios, las transferencias o los
+ingresos de los hogares.
 
-###  4. En una tabla, presenten e interpreten los resultados de estimar por VI el efecto de (mayores) ingresos públicos (producto del petróleo) sobre el gasto público reportado en el año 2000 en Educación y Cultura, Salud y Sanitización, Transporte y Transferencias Sociales.
+La extracción de petróleo mar adentro limita de manera importante la
+existencia de derrames productivos locales y evita que los municipios
+reciban beneficios económicos distintos a las transferencias fiscales.
+Además, como las regalías se asignan según reglas legales vinculadas a
+la ubicación geográfica de los campos, el ingreso municipal depende de
+criterios externos y no de la capacidad de gestión local. Para reforzar
+este argumento, los autores presentan pruebas de falsificación que
+muestran que las condiciones socioeconómicas en 1970, antes de los
+descubrimientos offshore, no predicen la producción futura de petróleo.
+Esto sugiere que la asignación de los yacimientos no está asociada a
+características históricas de desarrollo municipal sino que se comporta
+de manera aleatoria una vez se controlan los factores geográficos.
 
-###  5. En una tabla, presenten e interpreten los resultados de estimar por VI el efecto de (mayores) ingresos públicos (producto del petróleo) sobre las variables efectivas de bienestar. En particular, sobre proporción de personas que no viven en favelas en 2000 y el número de salones por millón de habitantes en el 2005. ¿Qué indican sus resultados? ¿Mayores ingresos públicos resultan en niveles del bienestar medido a través de estas variables?. En texto describa los resultados para la primera variable .
+En síntesis, los autores defienden de forma convincente que la
+localización costa afuera de los yacimientos impide la existencia de un
+canal productivo directo entre la actividad petrolera y el bienestar
+local, de modo que la única vía de transmisión entre la abundancia de
+petróleo y los resultados municipales es el aumento de regalías y
+transferencias fiscales.
+
+### 3. Primera etapa
+
+##### En una tabla, presenten los resultados de estimar la primera etapa de la metodología de Variables Instrumentales. ¿Es el instrumento relevante y fuerte? Contesten esta pregunta usando los dos criterios recomendados en la clase magistral.
+
+### 4. Segunda etapa
+
+##### En una tabla, presenten e interpreten los resultados de estimar por VI el efecto de (mayores) ingresos públicos (producto del petróleo) sobre el gasto público reportado en el año 2000 en Educación y Cultura, Salud y Sanitización, Transporte y Transferencias Sociales.
+
+### 5. Forma reducida
+
+##### En una tabla, presenten e interpreten los resultados de estimar por VI el efecto de (mayores) ingresos públicos (producto del petróleo) sobre las variables efectivas de bienestar. En particular, sobre proporción de personas que no viven en favelas en 2000 y el número de salones por millón de habitantes en el 2005. ¿Qué indican sus resultados? ¿Mayores ingresos públicos resultan en niveles del bienestar medido a través de estas variables?. En texto describa los resultados para la primera variable .
 
 ```{r}
 reg4 <- plm(prop ~ Corrupt + Auditada + AlreadyAudited + HOMI_CAP_MUN + unauthorized,
@@ -86,6 +149,7 @@ reg4 <- plm(prop ~ Corrupt + Auditada + AlreadyAudited + HOMI_CAP_MUN + unauthor
 
 summary(reg4)
 ```
+
 ```{r}
 
 # Tabla de resumen
