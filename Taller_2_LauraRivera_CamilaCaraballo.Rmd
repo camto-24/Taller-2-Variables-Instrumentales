@@ -1,0 +1,106 @@
+---
+title: "Taller 2- Evaluación de impacto"
+author: "Camila Caraballo, Laura Rivera"
+date: "2025-09-2"
+output: html_document
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+# Taller 2- Variables Instrumentales
+
+```{r}
+# Cargar liberias y paquetes
+
+#install.packages("haven") # Archivos .dta
+#install.packages("plm")
+#install.packages("skimr")
+#install.packages("dplyr")
+#install.packages("ggplot2")
+
+library(haven)
+library(plm)
+library(scales)
+library(skimr)
+library(dplyr)
+library(ggplot2)
+
+
+# Leer archivo .dta
+#data <- read_dta("oil_windfall_sin10percV.dta")
+
+# Leer archivo .dta
+data <- read_dta("C:/1. MECA/2025/EVALUACIACÓN DE IMPACTO- Raachid Raaj/Taller 2- Variables instrumentales/oil_windfall_sin10percV.dta")
+```
+
+### 1. Ecuaciones
+
+##### Especificación en niveles (OLS, Ecuación 1)
+
+ $$W_{m}= δ_1​+θ1​Rm​+Xm′_ρ1​+um_1​$$ 
+
+Donde 
+$W_m$: Outcome o variable dependiente. Representa los resultados de interés en el municipio m (por ejemplo, indicadores de bienestar, desarrollo económico, etc.). 
+
+$R_m$: Regalías recibidas por el municipio m.
+
+$X_m$: Controles geográficos y estructurales: latitud, longitud, indicador si el municipio está en la costa, distancias a capital federal y estatal, dummy de capital estatal, efectos fijos estatales.
+
+$um_1$ Término de error.
+
+##### Especificación VI (OLS, Ecuación 3 y 4)
+
+$$Ym,1970=δ3+η0 Qm,2000+Xm′ρ3+um3$$
+
+•	$Ym,1970$: Outcome en 1970 del municipio m. Se usa como “placebo” para probar que el instrumento no estaba correlacionado con condiciones socioeconómicas históricas.
+•	$Qm,2000$: Producción petrolera en el año 2000 en el municipio m. Es el instrumento para regalías Rm.
+•	$Xm′$: Vector de controles geográficos y estructurales (latitud, longitud, dummy costa, distancias a capitales, dummy capital estatal, efectos fijos estatales).
+•	$um_3$: Término de error.
+
+
+$$Ym,2002 = δ3+η0 Qm,2002+Xm′ρ3+um3$$
+
+•	$Ym,1970$: Outcome en 2002 del municipio m. (indicadores de bienestar, acceso a servicios, etc.). Es la variable dependiente principal.
+•	$Qm,2000$: Producción petrolera en el año 2000 en el municipio m. Es el instrumento para regalías Rm.
+•	$Xm′$: Vector de controles geográficos y estructurales (latitud, longitud, dummy costa, distancias a capitales, dummy capital estatal, efectos fijos estatales).
+•	$um_3$: Término de error.
+
+
+### 2. ¿Cuál es la intuición detrás de implementar Variables Instrumentales (VI) en vez de Mínimos Cuadrados Ordinarios (MCO)? En este escenario: Mencione al menos un sesgo del cual podríamos estar preocupados si interpretamos los efectos por MCO de manera causal. ¿Cuáles son los supuestos necesarios para que VI nos permita recuperar el efecto causal de interés? ¿Son creíbles los supuestos? Argumenten.
+
+En este paper, se implementa variables instrumentales (IV) porque los estimadores OLS estarían sesgados por endogeneidad (municipios con regalías podrían ser distintos en riqueza, gobernanza o historia). El instrumento (geología + ley del petróleo) es relevante porque determina qué municipios reciben regalías, y es exógeno porque no debería afectar el bienestar directamente, salvo a través de los ingresos municipales. Los supuestos de IV son en gran medida creíbles dado el diseño institucional brasileño y las pruebas de balance histórico que hacen los autores.
+
+###  3. En una tabla, presenten los resultados de estimar la primera etapa de la metodología de Variables Instrumentales. ¿Es el instrumento relevante y fuerte? Contesten esta pregunta usando los dos criterios recomendados en la clase magistral.
+
+###  4. En una tabla, presenten e interpreten los resultados de estimar por VI el efecto de (mayores) ingresos públicos (producto del petróleo) sobre el gasto público reportado en el año 2000 en Educación y Cultura, Salud y Sanitización, Transporte y Transferencias Sociales.
+
+###  5. En una tabla, presenten e interpreten los resultados de estimar por VI el efecto de (mayores) ingresos públicos (producto del petróleo) sobre las variables efectivas de bienestar. En particular, sobre proporción de personas que no viven en favelas en 2000 y el número de salones por millón de habitantes en el 2005. ¿Qué indican sus resultados? ¿Mayores ingresos públicos resultan en niveles del bienestar medido a través de estas variables?. En texto describa los resultados para la primera variable .
+
+```{r}
+reg4 <- plm(prop ~ Corrupt + Auditada + AlreadyAudited + HOMI_CAP_MUN + unauthorized,
+            data = base_agregada,
+            index = c("id_panel", "year"),
+            model = "within",
+            effect = "twoways")
+
+summary(reg4)
+```
+```{r}
+
+# Tabla de resumen
+stargazer(reg1, reg2, reg3, reg4,
+          type = "text",              
+          keep = c("Corrupt"),           
+          omit.stat = c("f","ser"),   
+          dep.var.labels = ("Proporción de alumnos que copian"),
+          covariate.labels = c("Corrupción", "Auditada"),
+          column.labels = c("MCO", "MCO + Controles", "FE", "FE + Controles"),
+          add.lines = list(
+            c("Controles", "No", "Sí", "No", "Sí"),
+            c("Efectos fijos", "No", "No", "Escuela", "Escuela")
+          ),
+          star.cutoffs = c(0.1, 0.05, 0.01),
+          notes = "Errores estándar robustos entre paréntesis. *** p<0.01, ** p<0.05, * p<0.1",
+          notes.align = "l")
+```
