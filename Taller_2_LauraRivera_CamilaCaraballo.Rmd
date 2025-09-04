@@ -13,11 +13,13 @@ editor_options:
 ```{r}
 # Cargar liberias y paquetes
 
-install.packages("haven") # Archivos .dta
-install.packages("plm")
-install.packages("skimr")
-install.packages("dplyr")
-install.packages("ggplot2")
+#install.packages("haven") cual
+#install.packages("plm")
+#install.packages("skimr")
+#install.packages("dplyr")
+#install.packages("ggplot2")
+#install.packages("modelsummary")
+
 
 library(haven)
 library(plm)
@@ -25,6 +27,11 @@ library(scales)
 library(skimr)
 library(dplyr)
 library(ggplot2)
+library(fixest)
+library(lmtest)
+library(sandwich)
+library(tidyverse)
+library(stargazer)
 
 # Leer archivo .dta
 data <- read_dta("oil_windfall_sin10perc.dta")
@@ -52,14 +59,14 @@ efectos fijos por estado.
 
 $$Y_{m,1970}=δ_3+η_0 Q_{m,2000}+X'_mρ_3+ w_{m3}$$
 
-Donde $$Y_{m,1970}$$ es el resultado socioeconómico en AMC para el año
+Donde $Y_{m,1970}$ es el resultado socioeconómico en AMC para el año
 1970 y se usa como “placebo” para probar que el instrumento no estaba
-correlacionado con condiciones socioeconómicas históricas,
-$$Q_{m,2000}$$ hace referencia a la producción petrolera en el año 2000
-en el municipio $m$, el cual funciona como el instrumento para regalías
-y $Xm′$ es el vector de controles geográficos y estructurales como
-latitud, longitud, si es costa, distancias a capitales, si es capital
-estatal junto con efectos fijos estatales.
+correlacionado con condiciones socioeconómicas históricas, $Q_{m,2000}$
+hace referencia a la producción petrolera en el año 2000 en el municipio
+$m$, el cual funciona como el instrumento para regalías y $Xm′$ es el
+vector de controles geográficos y estructurales como latitud, longitud,
+si es costa, distancias a capitales, si es capital estatal junto con
+efectos fijos estatales.
 
 $$Y_{m,2002} = δ_4+η_4Q_{m,2002}+X'_mρ_4+w_{m4}$$
 
@@ -68,7 +75,7 @@ $m$, $Q_{m,2000}$ es la producción petrolera en el año 2000 en el
 municipio $m$. y $X'_m$ es el vector de controles geográficos y
 estructurales.
 
-### 2. Intuición metodológica 
+### 2. Intuición metodológica
 
 ##### ¿Cuál es la intuición detrás de implementar Variables Instrumentales (VI) en vez de Mínimos Cuadrados Ordinarios (MCO)? En este escenario: Mencione al menos un sesgo del cual podríamos estar preocupados si interpretamos los efectos por MCO de manera causal. ¿Cuáles son los supuestos necesarios para que VI nos permita recuperar el efecto causal de interés? ¿Son creíbles los supuestos? Argumenten.
 
@@ -96,8 +103,8 @@ sociales.
 La validez de esta estrategia depende del cumplimiento de dos
 condiciones. La primera es la relevancia, que implica que la producción
 de petróleo $Q_m$​ esté correlacionada con los ingresos municipales
-$$R_m$$​. Los autores muestran evidencia a favor de este punto al
-encontrar que un real adicional de producción petrolera se asocia con un
+$R_m$Los autores muestran evidencia a favor de este punto al encontrar
+que un real adicional de producción petrolera se asocia con un
 incremento promedio de tres centavos en los ingresos municipales. La
 segunda es la exclusión, que exige que la producción de petróleo afecte
 los resultados socioeconómicos $W_m$ únicamente a través de los ingresos
@@ -132,9 +139,78 @@ transferencias fiscales.
 
 ##### En una tabla, presenten los resultados de estimar la primera etapa de la metodología de Variables Instrumentales. ¿Es el instrumento relevante y fuerte? Contesten esta pregunta usando los dos criterios recomendados en la clase magistral.
 
+```{r}
+
+#Transformación de variables 
+data <- data %>%
+    rename(
+    revenue     = mun_budget_revenue2000_pred_c,
+    oil_pc      = oilandgasvalue2000_cap,
+    lat         = latitude1998,
+    lon         = longitude1998,
+    coast       = coastal,
+    dist_fedcap = dist_federal_capital1998,
+    dist_statecap = dist_state_capital1998,
+    state_cap   = state_capital,
+    state    = sigla
+  )
+  
+# Cambiar a tipo factor 
+data <- data %>% mutate(state = as.factor(state))
+
+# Primera etapa con FE de estado 
+primer <- lm(
+  revenue ~ oil_pc + lat + lon + coast + dist_fedcap + dist_statecap + state_cap + factor(state),
+  data = data
+)
+
+vc <- vcovCL(primer, cluster = ~ state, type = "HC1")
+ct <- coeftest(primer, vcov = vc)
+
+# Solo coeficientes a reportar y sus SE
+vars_keep <- c("oil_pc","lat","lon","coast","dist_fedcap","dist_statecap","state_cap")
+idx <- match(vars_keep, rownames(ct))
+betas <- ct[idx, "Estimate"]
+ses   <- ct[idx, "Std. Error"]
+
+stargazer(
+  primer,
+  type = "text",                    
+  coef = list(betas),
+  se   = list(ses),
+  keep = paste0("^(", paste(vars_keep, collapse="|"), ")$"),
+  dep.var.labels   = "Ingresos municipales",
+  covariate.labels = c("Producción de petróleo","Latitud","Longitud",
+                       "Dummy costa","Dist. capital federal","Dist. capital estatal","Dummy capital estatal"),
+  omit             = "factor\\(state_id\\)|\\(Intercept\\)",
+  star.cutoffs     = c(.10,.05,.01),
+  digits           = 3,
+  title            = "Primera etapa: ingresos municipales sobre producción petrolera y controles"
+)
+```
+
+Interpretación de la tabla: El resultado de la primera etapa muestra que
+la producción de petróleo per cápita es un instrumento relevante y
+fuerte para explicar los ingresos municipales. El coeficiente es
+estadísticamente significativo y el estadístico F alcanza un valor de
+38, muy por encima del umbral de 10 sugerido por Stock y Yogo, lo que
+descarta preocupaciones sobre debilidad del instrumento y respalda la
+validez de la estrategia de variables instrumentales.
+
 ### 4. Segunda etapa
 
 ##### En una tabla, presenten e interpreten los resultados de estimar por VI el efecto de (mayores) ingresos públicos (producto del petróleo) sobre el gasto público reportado en el año 2000 en Educación y Cultura, Salud y Sanitización, Transporte y Transferencias Sociales.
+
+```{r}
+
+#Segunda etapa 
+
+segnd <- feols(
+  outcome ~ 1 | state | (revenue ~ oil_pc + lat + lon + coast + dist_fedcap + dist_statecap + state_cap),
+  data = data,
+  cluster = ~ state
+)
+```
 
 ### 5. Forma reducida
 
