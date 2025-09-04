@@ -27,14 +27,13 @@ library(scales)
 library(skimr)
 library(dplyr)
 library(ggplot2)
-<<<<<<< HEAD
 library(AER)         # ivreg
-=======
+
 library(fixest)
 library(lmtest)
 library(sandwich)
 library(tidyverse)
->>>>>>> 9c82e87e897493235ffca769398c8f409a058469
+
 library(stargazer)
 
 # Leer archivo .dta
@@ -144,7 +143,7 @@ transferencias fiscales.
 ##### En una tabla, presenten los resultados de estimar la primera etapa de la metodología de Variables Instrumentales. ¿Es el instrumento relevante y fuerte? Contesten esta pregunta usando los dos criterios recomendados en la clase magistral.
 
 ```{r}
-<<<<<<< HEAD
+
 # Eliminar aleatoriamente el 10% de la base
 
 # Número exacto de filas a eliminar (10% de la base)
@@ -173,8 +172,6 @@ t_stat <- summary(primera_etapa)$coefficients["oilandgasvalue2000_cap", "t value
 F_stat <- t_stat^2
 F_stat
 ```
-
-=======
 
 #Transformación de variables 
 data <- data %>%
@@ -231,13 +228,13 @@ estadísticamente significativo y el estadístico F alcanza un valor de
 38, muy por encima del umbral de 10 sugerido por Stock y Yogo, lo que
 descarta preocupaciones sobre debilidad del instrumento y respalda la
 validez de la estrategia de variables instrumentales.
->>>>>>> 9c82e87e897493235ffca769398c8f409a058469
+
 
 ### 4. Segunda etapa
 
 ##### En una tabla, presenten e interpreten los resultados de estimar por VI el efecto de (mayores) ingresos públicos (producto del petróleo) sobre el gasto público reportado en el año 2000 en Educación y Cultura, Salud y Sanitización, Transporte y Transferencias Sociales.
 
-<<<<<<< HEAD
+
 
 Análisis: Los resultados de la estimación por variables instrumentales muestran que un aumento en los ingresos municipales predichos por la producción de petróleo/gas se traduce en mayores niveles de gasto público municipal en todos los sectores analizados en el año 2000.
 
@@ -292,8 +289,6 @@ stargazer(iv_educ, iv_salud, iv_transp, iv_welfare,
 ```
 
 
-
-=======
 ```{r}
 
 #Segunda etapa 
@@ -305,7 +300,6 @@ segnd <- feols(
 )
 ```
 
->>>>>>> 9c82e87e897493235ffca769398c8f409a058469
 ### 5. Forma reducida
 
 ##### En una tabla, presenten e interpreten los resultados de estimar por VI el efecto de (mayores) ingresos públicos (producto del petróleo) sobre las variables efectivas de bienestar. En particular, sobre proporción de personas que no viven en favelas en 2000 y el número de salones por millón de habitantes en el 2005. ¿Qué indican sus resultados? ¿Mayores ingresos públicos resultan en niveles del bienestar medido a través de estas variables?. En texto describa los resultados para la primera variable .
