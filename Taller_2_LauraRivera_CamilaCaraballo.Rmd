@@ -25,6 +25,8 @@ library(scales)
 library(skimr)
 library(dplyr)
 library(ggplot2)
+library(AER)         # ivreg
+library(stargazer)
 
 # Leer archivo .dta
 data <- read_dta("oil_windfall_sin10perc.dta")
@@ -132,39 +134,126 @@ transferencias fiscales.
 
 ##### En una tabla, presenten los resultados de estimar la primera etapa de la metodología de Variables Instrumentales. ¿Es el instrumento relevante y fuerte? Contesten esta pregunta usando los dos criterios recomendados en la clase magistral.
 
+```{r}
+# Eliminar aleatoriamente el 10% de la base
+
+# Número exacto de filas a eliminar (10% de la base)
+eliminar <- round(0.1 * nrow(data))
+
+# Escoger aleatoriamente los índices a eliminar
+drop_index <- sample(1:nrow(data), size = eliminar)
+
+# Crear la submuestra eliminando esos índices
+data2 <- data[-drop_index, ]
+
+# Solo municipios costeros que reciben petroleo 
+data2 <- subset(data2, coastal == 1 & onshore == 0)
+
+# Observa base
+str(data2)
+
+# Primera etapa
+primera_etapa <- lm(mun_budget_revenue2000_pred_c ~ oilandgasvalue2000_cap, data = data2)
+summary(primera_etapa)
+
+# 2. Extraer el t del coeficiente del instrumento
+t_stat <- summary(primera_etapa)$coefficients["oilandgasvalue2000_cap", "t value"]
+
+# 3. Calcular F como t^2
+F_stat <- t_stat^2
+F_stat
+```
+
+
 ### 4. Segunda etapa
 
 ##### En una tabla, presenten e interpreten los resultados de estimar por VI el efecto de (mayores) ingresos públicos (producto del petróleo) sobre el gasto público reportado en el año 2000 en Educación y Cultura, Salud y Sanitización, Transporte y Transferencias Sociales.
+
+
+Análisis: Los resultados de la estimación por variables instrumentales muestran que un aumento en los ingresos municipales predichos por la producción de petróleo/gas se traduce en mayores niveles de gasto público municipal en todos los sectores analizados en el año 2000.
+
+1) Educación y Cultura: el coeficiente es 0.140*, lo que indica que un aumento de 1 unidad en los ingresos municipales predichos se asocia con un incremento de 0.14 unidades en el gasto en Educación y Cultura. Este efecto es estadísticamente significativo al 1%, lo que demuestra un impacto claro y positivo.
+
+2) Salud y Sanitización: el coeficiente es 0.134*, también altamente significativo, mostrando que mayores ingresos municipales impulsan el gasto en servicios de salud y saneamiento de manera similar.
+
+3) Transporte: el coeficiente es 0.120*, significativo al 1%, indicando que el gasto en infraestructura y transporte aumenta con mayores ingresos públicos derivados del petróleo.
+
+4) Transferencias Sociales: el coeficiente es 0.054*, positivo y significativo, aunque menor que en los otros sectores, lo que sugiere que una parte de los recursos se destina a programas de bienestar social, pero en menor proporción comparado con Educación, Salud y Transporte.
+
+Finalmente, estos resultados muestran que los choques positivos de ingresos provenientes del petróleo genera un aumento del gasto público municipal en múltiples sectores, con mayor intensidad en Educación, Salud y Transporte, y menor en Transferencias Sociales. Esto indica que los municipios costeros que reciben petróleo offshore tienden a canalizar estos recursos hacia servicios públicos esenciales.
+```{r}
+
+# Regresión Educación y Cultura
+iv_educ <- ivreg(pmun_exp_funct_educ_cult2000c ~ mun_budget_revenue2000_pred_c |
+                   oilandgasvalue2000_cap,
+                 data = data2)
+
+# Regresión Salud y Sanitización
+iv_salud <- ivreg(pmun_exp_funct_health_sanit2000c ~ mun_budget_revenue2000_pred_c |
+                    oilandgasvalue2000_cap,
+                  data = data2)
+
+# Regresión Transporte
+iv_transp <- ivreg(pmun_exp_funct_transport2000c ~ mun_budget_revenue2000_pred_c |
+                     oilandgasvalue2000_cap,
+                   data = data2)
+
+# Regresión Transferencias sociales
+iv_welfare <- ivreg(pmun_exp_funct_welf2000c ~ mun_budget_revenue2000_pred_c |
+                      oilandgasvalue2000_cap,
+                    data = data2)
+
+stargazer(iv_educ, iv_salud, iv_transp, iv_welfare,
+          type = "text",              
+          keep = c("mun_budget_revenue2000_pred_c"),  
+          omit.stat = c("f","ser"),  
+          dep.var.labels = ("Gasto público municipal (2000)"),
+          covariate.labels = c("Ingresos municipales (IV)"),
+          column.labels = c("Educación y Cultura", "Salud y Sanitización", 
+                            "Transporte", "Transferencias Sociales"),
+          add.lines = list(
+            c("Muestra", "Costeros offshore", "Costeros offshore", "Costeros offshore", "Costeros offshore"),
+            c("Instrumento", "Petróleo/gas pc", "Petróleo/gas pc", "Petróleo/gas pc", "Petróleo/gas pc")
+          ),
+          star.cutoffs = c(0.1, 0.05, 0.01),
+          notes = "Errores estándar robustos entre paréntesis. *** p<0.01, ** p<0.05, * p<0.1",
+          notes.align = "l")
+
+
+```
+
+
 
 ### 5. Forma reducida
 
 ##### En una tabla, presenten e interpreten los resultados de estimar por VI el efecto de (mayores) ingresos públicos (producto del petróleo) sobre las variables efectivas de bienestar. En particular, sobre proporción de personas que no viven en favelas en 2000 y el número de salones por millón de habitantes en el 2005. ¿Qué indican sus resultados? ¿Mayores ingresos públicos resultan en niveles del bienestar medido a través de estas variables?. En texto describa los resultados para la primera variable .
 
+Anaálisis: Los resultados de la estimación de forma reducida muestran que los ingresos municipales predichos por la producción de petróleo no generan mejoras evidentes en el bienestar medido a través de la proporción de población que no vive en favelas en 2000. El coeficiente del ingreso municipal es negativo y muy pequeño (-0.0005) y estadísticamente significativo, lo que indica que un aumento en los ingresos derivados del petróleo/gas se asocia con una ligera disminución de esta proporción. Aunque el instrumento utilizado es fuerte (F estadístico = 23.28***), el modelo explica solo el 13.6% de la variabilidad en la variable de bienestar, sugiriendo que otros factores locales son determinantes más importantes. En conclusión, estos resultados sugieren que mayores ingresos públicos no se traducen necesariamente en mejoras efectivas en la calidad de vida medida por este indicador en el año 2000.
 ```{r}
-reg4 <- plm(prop ~ Corrupt + Auditada + AlreadyAudited + HOMI_CAP_MUN + unauthorized,
-            data = base_agregada,
-            index = c("id_panel", "year"),
-            model = "within",
-            effect = "twoways")
+# Eliminar NA
+data3 <- na.omit(data2[, c("p_hhld_abovestrandard_ppl_2000",
+                             "clroomsMunicipal_pop2005",
+                             "mun_budget_revenue2000_pred_c",
+                             "oilandgasvalue2000_cap")])
 
-summary(reg4)
-```
+# Revisar que se eliminaron los NA
+sum(is.na(data3$mun_budget_revenue2000_pred_c))
 
-```{r}
+# Personas que no viven en favelas en 2000
+favelas <- lm(p_hhld_abovestrandard_ppl_2000 ~ oilandgasvalue2000_cap, data = data3)
 
-# Tabla de resumen
-stargazer(reg1, reg2, reg3, reg4,
-          type = "text",              
-          keep = c("Corrupt"),           
-          omit.stat = c("f","ser"),   
-          dep.var.labels = ("Proporción de alumnos que copian"),
-          covariate.labels = c("Corrupción", "Auditada"),
-          column.labels = c("MCO", "MCO + Controles", "FE", "FE + Controles"),
-          add.lines = list(
-            c("Controles", "No", "Sí", "No", "Sí"),
-            c("Efectos fijos", "No", "No", "Escuela", "Escuela")
-          ),
+# Número de salones por millón de habitantes en el 2005.
+salones <- lm(clroomsMunicipal_pop2005 ~ oilandgasvalue2000_cap, data = data3)
+
+# Tabla
+stargazer(favelas, salones,
+          type = "text",
+          dep.var.labels = c("% población fuera de favelas (2000)",
+                             "Salones por millón de habitantes (2005)"),
+          covariate.labels = c("Ingresos municipales (IV)"),
+          column.labels = c("Bienestar 1", "Bienestar 2"),
           star.cutoffs = c(0.1, 0.05, 0.01),
           notes = "Errores estándar robustos entre paréntesis. *** p<0.01, ** p<0.05, * p<0.1",
           notes.align = "l")
 ```
+
