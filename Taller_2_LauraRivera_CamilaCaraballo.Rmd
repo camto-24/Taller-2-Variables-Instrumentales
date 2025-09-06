@@ -15,13 +15,14 @@ editor_options:
 ```{r}
 # Cargar liberias y paquetes
 
-#install.packages("haven") cual
+#install.packages("haven") 
 #install.packages("plm")
 #install.packages("skimr")
 #install.packages("dplyr")
 #install.packages("ggplot2")
 #install.packages("modelsummary")
 install.packages("knitr")
+install.packages("xfun")
 library(knitr)
 install.packages("tinytex")
 tinytex::install_tinytex()
