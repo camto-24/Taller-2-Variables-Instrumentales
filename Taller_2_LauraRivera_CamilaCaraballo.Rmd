@@ -1,11 +1,12 @@
 ---
-title: "Taller 2- Evaluación de impacto"
+title: "Taller 2 - Evaluación de impacto"
 author: "Camila Caraballo, Laura Rivera"
-date: "2025-09-2"
+date: "2025-09-02"
 output:
-  html_document: default
   pdf_document: 
     latex_engine: xelatex
+  html_document: default
+geometry: margin=2cm
 editor_options:
   markdown:
     wrap: 72
@@ -13,7 +14,7 @@ editor_options:
 
 # Taller 2- Variables Instrumentales
 
-```{r}
+```{r setup, message=FALSE, warning=FALSE}
 # Cargar liberias y paquetes
 
 #install.packages("haven") 
@@ -80,7 +81,7 @@ estructurales.
 
 ### 2. Intuición metodológica
 
-##### ¿Cuál es la intuición detrás de implementar Variables Instrumentales (VI) en vez de Mínimos Cuadrados Ordinarios (MCO)? En este escenario: Mencione al menos un sesgo del cual podríamos estar preocupados si interpretamos los efectos por MCO de manera causal. ¿Cuáles son los supuestos necesarios para que VI nos permita recuperar el efecto causal de interés? ¿Son creíbles los supuestos? Argumenten.
+##### ¿Cuál es la intuición detrás de implementar Variables Instrumentales (VI) en vez de Mínimos Cuadrados Ordinarios (MCO)? En este escenario: Mencione al menos un sesgo del cual podríamos estar preocupados si interpretamos los efectos por MCO de manera causal. ¿Cuáles son los supuestos necesarios para que VI nos permita recuperar el efecto causal de interés? ¿Son creíbles los supuestos? Argumenten.\newline
 
 La razón principal para emplear el método de variable instrumental es
 que una estimación por Mínimos Cuadrados Ordinarios (MCO) podría arrojar
@@ -138,6 +139,8 @@ local, de modo que la única vía de transmisión entre la abundancia de
 petróleo y los resultados municipales es el aumento de regalías y
 transferencias fiscales.
 
+\newpage
+
 ### 3. Primera etapa
 
 ##### En una tabla, presenten los resultados de estimar la primera etapa de la metodología de Variables Instrumentales. ¿Es el instrumento relevante y fuerte? Contesten esta pregunta usando los dos criterios recomendados en la clase magistral.
@@ -158,9 +161,6 @@ data_final <- data[-drop_index, ]
 # Solo municipios costeros que reciben petroleo 
 data_final <- subset(data_final, coastal == 1 & onshore == 0)
 
-# Observa base
-str(data_final)
-
 #Transformación de variables 
 data_final <- data_final %>%
     rename(
@@ -176,13 +176,12 @@ data_final <- data_final %>%
     
   )
   
-  
 # Cambiar a tipo factor 
 data_final <- data_final %>% mutate(state = as.factor(state))
 
 # Primera etapa con FE de estado 
 prim_et <- lm(
-  revenue ~ oil_pc + lat + lon + coast + dist_fedcap + dist_statecap + state_cap + factor(state),
+  revenue ~ oil_pc + lat + lon + dist_fedcap + dist_statecap + state_cap + factor(state),
   data = data_final
 )
 
@@ -191,33 +190,32 @@ vc <- vcovCL(prim_et, cluster = ~ state, type = "HC1")
 ct <- coeftest(prim_et, vcov = vc)
 
 # Solo coeficientes a reportar y sus SE
-vars_keep <- c("oil_pc","lat","lon","coast","dist_fedcap","dist_statecap","state_cap")
+vars_keep <- c("oil_pc","lat","lon","dist_fedcap","dist_statecap","state_cap")
 idx <- match(vars_keep, rownames(ct))
-betas <- ct[idx, "Estimate"]
-ses   <- ct[idx, "Std. Error"]
+betas1 <- ct[idx, "Estimate"]
+ses1   <- ct[idx, "Std. Error"]
 
+```
+
+```{r}
 #Tabulación de los resultados 
 stargazer(
   prim_et,
   type = "text",
-  coef = list(betas),
-  se   = list(ses),
+  coef = list(betas1),
+  se   = ses1,
   keep = paste0("^(", paste(vars_keep, collapse = "|"), ")$"),
   dep.var.labels   = "Ingresos municipales",
   covariate.labels = c("Producción de petróleo",
                        "Latitud",
                        "Longitud",
-                       "Dummy costa",
                        "Dist. capital federal",
                        "Dist. capital estatal",
                        "Dummy capital estatal"),
   omit             = "factor\\(state_id\\)|\\(Intercept\\)",
   star.cutoffs     = c(.10, .05, .01),
   digits           = 3,
-  title            = "Primera etapa: ingresos municipales sobre producción petrolera y controles",
-  notes            = "Errores estándar robustos agrupados por estado entre paréntesis.",
-  font.size        = "scriptsize",
-  table.align      = "center"
+  title            = "Ingresos municipales sobre producción petrolera y controles"
 )
 
 ```
@@ -282,17 +280,19 @@ m_soc_iv   <- ivreg(ex_soc_transf     ~ revenue + lat + lon + coast + dist_fedca
 
 #Errores agrupados por Estado 
 vc <- function(m) sandwich::vcovCL(m, cluster = ~ state, type = "HC1")
-ses <- lapply(list(m_edu_iv,m_salud_iv,m_urb_iv,m_trans_iv,m_soc_iv), function(m) sqrt(diag(vc(m))))
+ses2 <- lapply(list(m_edu_iv,m_salud_iv,m_trans_iv,m_soc_iv), function(m) sqrt(diag(vc(m))))
+```
 
+```{r}
 #Presentación de resultados en tabla
 stargazer(
   m_edu_iv, m_salud_iv, m_trans_iv, m_soc_iv,
-  type = "latex", 
-  se = list(ses),
-  dep.var.labels = c("Gasto Educación/Cultura",
-                     "Gasto Salud/Saneamiento",
-                     "Gasto Transporte",
-                     "Gasto Asistencia Social"),
+  type = "text", 
+  se = ses2,
+  dep.var.labels = c("Educación/Cultura",
+                     "Salud/Saneamiento",
+                     "Transporte",
+                     "Asistencia Social"),
   covariate.labels = c("Ingresos (IV)",
                        "Latitud",
                        "Longitud",
@@ -304,10 +304,7 @@ stargazer(
   omit.labels = "Dummies de estado",
   star.cutoffs = c(.10, .05, .01), 
   digits = 3,
-  title = "Segunda etapa: ingresos instrumentados y gastos por función",
-  notes = "Errores estándar robustos agrupados por estado entre paréntesis.",
-  font.size = "scriptsize",
-  table.align = "center"
+  title = "Segunda etapa: ingresos instrumentados y gastos por función"
 )
 
 ```
@@ -380,11 +377,8 @@ stargazer(
   omit             = "factor\\(state_id\\)|lat|lon|coast|dist_fedcap|dist_statecap|state_cap|Intercept",
   omit.labels      = "Controles y efectos fijos",
   star.cutoffs     = c(.10,.05,.01),
-  table.align = "center",
   digits           = 3,
-  title            = "Efecto del petróleo sobre indicadores de bienestar",
-  notes            = "Errores estándar robustos agrupados por estado entre paréntesis. Modelos incluyen controles geográficos y efectos fijos de estado.",
-  notes.align      = "l"
+  title            = "Efecto del petróleo sobre indicadores de bienestar"
 )
 ```
 
