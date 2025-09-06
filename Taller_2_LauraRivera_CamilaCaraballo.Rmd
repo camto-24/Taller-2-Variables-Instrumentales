@@ -197,7 +197,7 @@ ses   <- ct[idx, "Std. Error"]
 #Tabulación de los resultados 
 stargazer(
   prim_et,
-  type = "text",                    
+  type = "html",                    
   coef = list(betas),
   se   = list(ses),
   keep = paste0("^(", paste(vars_keep, collapse="|"), ")$"),
@@ -277,7 +277,7 @@ ses <- lapply(list(m_edu_iv,m_salud_iv,m_urb_iv,m_trans_iv,m_soc_iv), function(m
 #Presentación de resultados en tabla
 stargazer(
   m_edu_iv,m_salud_iv,m_trans_iv,m_soc_iv,
-  type = "text", se = ses,
+  type = "html", se = ses,
   dep.var.labels = c("Gasto Educación/Cultura","Gasto Salud/Saneamiento","Gasto Transporte","Gasto Asistencia Social"),
   covariate.labels = c("Ingresos (IV)","Latitud","Longitud","Costa","Dist. capital federal","Dist. capital estatal","Capital estatal"),
   omit = "factor\\(state\\)|\\(Intercept\\)", omit.labels = "Dummies de estado",
@@ -289,81 +289,94 @@ stargazer(
 
 ```
 
-Análisis: Los resultados de la estimación por variables instrumentales
-muestran que un aumento en los ingresos municipales predichos por la
-producción de petróleo/gas se traduce en mayores niveles de gasto
-público municipal en todos los sectores analizados en el año 2000.
+Los resultados de la estimación mediante variables instrumentales
+confirman que un aumento en los ingresos municipales predichos por la
+producción de petróleo y gas se traduce en mayores niveles de gasto
+público en los distintos sectores analizados para el año 2000. Este
+hallazgo muestra una relación positiva y estadísticamente significativa
+entre los recursos fiscales extraordinarios y el gasto municipal, lo que
+respalda la hipótesis de que las regalías derivadas de la explotación
+petrolera tienen un impacto directo sobre la provisión de bienes y
+servicios públicos.
 
-1)  Educación y Cultura: el coeficiente es 0.139, lo que indica que un
-    aumento de 1 unidad en los ingresos municipales predichos se asocia
-    con un incremento de 0.14 unidades en el gasto en Educación y
-    Cultura. Este efecto es estadísticamente significativo al 1%, lo que
-    demuestra un impacto claro y positivo.
+En el sector de Educación y Cultura, el coeficiente estimado es de
+0.139, lo que implica que un incremento de una unidad en los ingresos
+municipales predichos se asocia con un aumento cercano a 0.14 unidades
+en el gasto destinado a este sector. Este resultado, significativo al
+1%, evidencia que la inversión en capital humano constituye una
+prioridad en el uso de los recursos adicionales. En el ámbito de Salud y
+Saneamiento, el coeficiente de 0.109, también significativo, sugiere un
+patrón similar: los municipios con mayores ingresos derivados del
+petróleo tienden a asignar más recursos al fortalecimiento de la
+infraestructura y los servicios de salud, mejorando así la cobertura y
+la calidad en este campo.
 
-2)  Salud y Sanitización: el coeficiente es 0.109\*, también altamente
-    significativo, mostrando que mayores ingresos municipales impulsan
-    el gasto en servicios de salud y saneamiento de manera similar.
+El gasto en Transporte presenta un coeficiente de 0.123, significativo
+al 1%, lo que indica que los ingresos extraordinarios también se
+destinan con fuerza a la construcción y mantenimiento de infraestructura
+vial y de transporte. Por su parte, las Transferencias Sociales muestran
+un coeficiente positivo de 0.052, estadísticamente significativo aunque
+de menor magnitud en comparación con los otros sectores. Esto revela
+que, aunque los recursos petroleros se utilizan para apoyar programas de
+bienestar social, su peso relativo es menor frente a las áreas de
+educación, salud y transporte.
 
-3)  Transporte: el coeficiente es 0.123, significativo al 1%, indicando
-    que el gasto en infraestructura y transporte aumenta con mayores
-    ingresos públicos derivados del petróleo.
-
-4)  Transferencias Sociales: el coeficiente es 0.052\*, positivo y
-    significativo, aunque menor que en los otros sectores, lo que
-    sugiere que una parte de los recursos se destina a programas de
-    bienestar social, pero en menor proporción comparado con Educación,
-    Salud y Transporte.
-
-Finalmente, estos resultados muestran que los choques positivos de
-ingresos provenientes del petróleo genera un aumento del gasto público
-municipal en múltiples sectores, con mayor intensidad en Educación,
-Salud y Transporte, y menor en Transferencias Sociales. Esto indica que
-los municipios costeros que reciben petróleo offshore tienden a
-canalizar estos recursos hacia servicios públicos esenciales.
+En conjunto, los resultados muestran que los choques positivos en
+ingresos municipales vinculados a la producción de petróleo offshore
+generan un aumento sustancial en el gasto público local, con mayor
+intensidad en los sectores de Educación, Salud y Transporte. Esta
+evidencia sugiere que los municipios costeros beneficiados canalizan los
+recursos principalmente hacia servicios públicos esenciales, mientras
+que las transferencias sociales reciben un refuerzo menor, lo que
+refleja una priorización clara en la asignación del gasto.
 
 ### 5. Forma reducida
 
 ##### En una tabla, presenten e interpreten los resultados de estimar por VI el efecto de (mayores) ingresos públicos (producto del petróleo) sobre las variables efectivas de bienestar. En particular, sobre proporción de personas que no viven en favelas en 2000 y el número de salones por millón de habitantes en el 2005. ¿Qué indican sus resultados? ¿Mayores ingresos públicos resultan en niveles del bienestar medido a través de estas variables?. En texto describa los resultados para la primera variable .
 
 ```{r}
-# Eliminar NA
-data_reducido <- na.omit(data_final[, c("p_hhld_abovestrandard_ppl_2000",
-                             "clroomsMunicipal_pop2005",
-                             "mun_budget_revenue2000_pred_c",
-                             "oilandgasvalue2000_cap")])
-
-# Revisar que se eliminaron los NA
-sum(is.na(data_reducido$revenue))
 
 # Personas que no viven en favelas en 2000
-favelas <- lm(p_hhld_abovestrandard_ppl_2000 ~ oilandgasvalue2000_cap, data = data3)
+m_nofav <- lm(perc_nofavelas ~ oil_pc + lat + lon + coast + dist_fedcap + dist_statecap + state_cap + factor(state), data = data_final)
 
 # Número de salones por millón de habitantes en el 2005.
-salones <- lm(clroomsMunicipal_pop2005 ~ oilandgasvalue2000_cap, data = data3)
+m_classrooms <- lm(salon_pob_2005 ~ oil_pc + lat + lon + coast + dist_fedcap + dist_statecap + state_cap + factor(state), data = data_final)
 
-# Tabla
-stargazer(favelas, salones,
-          type = "text",
-          dep.var.labels = c("% población fuera de favelas (2000)",
-                             "Salones por millón de habitantes (2005)"),
-          covariate.labels = c("Ingresos municipales (IV)"),
-          column.labels = c("Bienestar 1", "Bienestar 2"),
-          star.cutoffs = c(0.1, 0.05, 0.01),
-          notes = "Errores estándar robustos entre paréntesis. *** p<0.01, ** p<0.05, * p<0.1",
-          notes.align = "l")
+# Errores estándar robustos agrupados por estado
+se_nofav      <- sqrt(diag(vcovCL(m_nofav, cluster = ~ state, type = "HC1")))
+se_classrooms <- sqrt(diag(vcovCL(m_classrooms, cluster = ~ state, type = "HC1")))
+
+#Tabulación forma reducida
+stargazer(
+  m_nofav, m_classrooms,
+  type             = "html",   
+  se               = list(se_nofav, se_classrooms),
+  dep.var.labels   = c("No-favelas", "Salones por millón de habitantes"),
+  covariate.labels = c("Producción de petróleo per cápita (instrumento)"),
+  keep             = "^oil_pc$",
+  omit             = "factor\\(state_id\\)|lat|lon|coast|dist_fedcap|dist_statecap|state_cap|Intercept",
+  omit.labels      = "Controles y efectos fijos",
+  star.cutoffs     = c(.10,.05,.01),
+  digits           = 3,
+  title            = "Forma reducida: efecto del petróleo sobre indicadores de bienestar",
+  notes            = "Errores estándar robustos agrupados por estado entre paréntesis. Modelos incluyen controles geográficos y efectos fijos de estado.",
+  notes.align      = "l"
+)
 ```
 
-Anaálisis: Los resultados de la estimación de forma reducida muestran
-que los ingresos municipales predichos por la producción de petróleo no
-generan mejoras evidentes en el bienestar medido a través de la
-proporción de población que no vive en favelas en 2000. El coeficiente
-del ingreso municipal es negativo y muy pequeño (-0.0005) y
-estadísticamente significativo, lo que indica que un aumento en los
-ingresos derivados del petróleo/gas se asocia con una ligera disminución
-de esta proporción. Aunque el instrumento utilizado es fuerte (F
-estadístico = 23.28\*\*\*), el modelo explica solo el 13.6% de la
-variabilidad en la variable de bienestar, sugiriendo que otros factores
-locales son determinantes más importantes. En conclusión, estos
-resultados sugieren que mayores ingresos públicos no se traducen
-necesariamente en mejoras efectivas en la calidad de vida medida por
-este indicador en el año 2000.
+El coeficiente estimado de –0.0005 implica que, por cada aumento de una
+unidad en la producción de petróleo per cápita, la proporción de
+personas que no viven en favelas disminuye en 0.05 puntos porcentuales.
+Aunque el valor numérico del efecto puede parecer pequeño, el hecho de
+que sea altamente significativo estadísticamente al 1% indica que la
+relación es sistemática y no producto del azar.
+
+Desde el punto de vista económico, este resultado es relevante porque
+muestra que los incrementos en la producción petrolera no se traducen en
+mejoras en las condiciones habitacionales, sino más bien en un ligero
+deterioro. Esto puede interpretarse como evidencia de que los ingresos
+del petróleo no se transforman de manera efectiva en políticas que
+reduzcan la informalidad en la vivienda. Por tanto, aun siendo
+cuantitativamente modesto, el hallazgo es importante porque cuestiona la
+eficacia con que los municipios canalizan los recursos petroleros hacia
+mejoras en bienestar habitacional al menos en esta variable de análisis.
