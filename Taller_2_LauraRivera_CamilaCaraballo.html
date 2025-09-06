@@ -360,19 +360,23 @@ display: none;
 <h1>Taller 2- Variables Instrumentales</h1>
 <pre class="r"><code># Cargar liberias y paquetes
 
-#install.packages(&quot;haven&quot;) cual
+#install.packages(&quot;haven&quot;) 
 #install.packages(&quot;plm&quot;)
 #install.packages(&quot;skimr&quot;)
 #install.packages(&quot;dplyr&quot;)
 #install.packages(&quot;ggplot2&quot;)
 #install.packages(&quot;modelsummary&quot;)
-
-
-library(haven)
-library(plm)
-library(scales)
-library(skimr)
-library(dplyr)</code></pre>
+library(knitr)</code></pre>
+<pre><code>## Warning: package &#39;knitr&#39; was built under R version 4.4.3</code></pre>
+<pre class="r"><code>library(haven)</code></pre>
+<pre><code>## Warning: package &#39;haven&#39; was built under R version 4.4.3</code></pre>
+<pre class="r"><code>library(plm)</code></pre>
+<pre><code>## Warning: package &#39;plm&#39; was built under R version 4.4.3</code></pre>
+<pre class="r"><code>library(scales)
+library(skimr)</code></pre>
+<pre><code>## Warning: package &#39;skimr&#39; was built under R version 4.4.3</code></pre>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 4.4.3</code></pre>
 <pre><code>## 
 ## Adjuntando el paquete: &#39;dplyr&#39;</code></pre>
 <pre><code>## The following objects are masked from &#39;package:plm&#39;:
@@ -384,8 +388,9 @@ library(dplyr)</code></pre>
 <pre><code>## The following objects are masked from &#39;package:base&#39;:
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>library(ggplot2)
-library(AER)        </code></pre>
+<pre class="r"><code>library(ggplot2)</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 4.4.3</code></pre>
+<pre class="r"><code>library(AER)        </code></pre>
 <pre><code>## Cargando paquete requerido: car</code></pre>
 <pre><code>## Cargando paquete requerido: carData</code></pre>
 <pre><code>## 
@@ -666,7 +671,7 @@ ses   &lt;- ct[idx, &quot;Std. Error&quot;]
 #Tabulación de los resultados 
 stargazer(
   prim_et,
-  type = &quot;latex&quot;,                    
+  type = &quot;text&quot;,                    
   coef = list(betas),
   se   = list(ses),
   keep = paste0(&quot;^(&quot;, paste(vars_keep, collapse=&quot;|&quot;), &quot;)$&quot;),
@@ -679,50 +684,41 @@ stargazer(
   title            = &quot;Primera etapa: ingresos municipales sobre producción petrolera y controles&quot;
 )</code></pre>
 <pre><code>## 
-## % Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
-## % Date and time: vie, sept. 05, 2025 - 8:12:41 p. m.
-## \begin{table}[!htbp] \centering 
-##   \caption{Primera etapa: ingresos municipales sobre producción petrolera y controles} 
-##   \label{} 
-## \begin{tabular}{@{\extracolsep{5pt}}lc} 
-## \\[-1.8ex]\hline 
-## \hline \\[-1.8ex] 
-##  &amp; \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
-## \cline{2-2} 
-## \\[-1.8ex] &amp; Ingresos municipales \\ 
-## \hline \\[-1.8ex] 
-##  Producción de petróleo &amp; 0.035$^{***}$ \\ 
-##   &amp; (0.002) \\ 
-##   &amp; \\ 
-##  Latitud &amp; 55.510$^{*}$ \\ 
-##   &amp; (28.647) \\ 
-##   &amp; \\ 
-##  Longitud &amp; 38.294 \\ 
-##   &amp; (43.702) \\ 
-##   &amp; \\ 
-##  Dummy costa &amp;  \\ 
-##   &amp;  \\ 
-##   &amp; \\ 
-##  Dist. capital federal &amp; $-$0.282 \\ 
-##   &amp; (0.239) \\ 
-##   &amp; \\ 
-##  Dist. capital estatal &amp; 0.241 \\ 
-##   &amp; (0.280) \\ 
-##   &amp; \\ 
-##  Dummy capital estatal &amp; 342.259$^{***}$ \\ 
-##   &amp; (118.171) \\ 
-##   &amp; \\ 
-## \hline \\[-1.8ex] 
-## Observations &amp; 141 \\ 
-## R$^{2}$ &amp; 0.672 \\ 
-## Adjusted R$^{2}$ &amp; 0.611 \\ 
-## Residual Std. Error &amp; 194.287 (df = 118) \\ 
-## F Statistic &amp; 10.983$^{***}$ (df = 22; 118) \\ 
-## \hline 
-## \hline \\[-1.8ex] 
-## \textit{Note:}  &amp; \multicolumn{1}{r}{$^{*}$p$&lt;$0.1; $^{**}$p$&lt;$0.05; $^{***}$p$&lt;$0.01} \\ 
-## \end{tabular} 
-## \end{table}</code></pre>
+## Primera etapa: ingresos municipales sobre producción petrolera y controles
+## ==================================================
+##                            Dependent variable:    
+##                        ---------------------------
+##                           Ingresos municipales    
+## --------------------------------------------------
+## Producción de petróleo          0.035***          
+##                                  (0.002)          
+##                                                   
+## Latitud                          55.510*          
+##                                 (28.647)          
+##                                                   
+## Longitud                         38.294           
+##                                 (43.702)          
+##                                                   
+## Dummy costa                                       
+##                                                   
+##                                                   
+## Dist. capital federal            -0.282           
+##                                  (0.239)          
+##                                                   
+## Dist. capital estatal             0.241           
+##                                  (0.280)          
+##                                                   
+## Dummy capital estatal          342.259***         
+##                                 (118.171)         
+##                                                   
+## --------------------------------------------------
+## Observations                       141            
+## R2                                0.672           
+## Adjusted R2                       0.611           
+## Residual Std. Error        194.287 (df = 118)     
+## F Statistic             10.983*** (df = 22; 118)  
+## ==================================================
+## Note:                  *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
 <p>Los resultados de esta primera etapa muestran que la producción de
 petróleo es un instrumento relevante para explicar los ingresos
 municipales pues la relación entre estas variables es estadísticamente
@@ -789,21 +785,25 @@ ses &lt;- lapply(list(m_edu_iv,m_salud_iv,m_urb_iv,m_trans_iv,m_soc_iv), functio
 
 #Presentación de resultados en tabla
 stargazer(
-  m_edu_iv,m_salud_iv,m_trans_iv,m_soc_iv,
+  m_edu_iv, m_salud_iv, m_trans_iv, m_soc_iv,
   type = &quot;latex&quot;, se = ses,
-  dep.var.labels = c(&quot;Gasto Educación/Cultura&quot;,&quot;Gasto Salud/Saneamiento&quot;,&quot;Gasto Transporte&quot;,&quot;Gasto Asistencia Social&quot;),
-  covariate.labels = c(&quot;Ingresos (IV)&quot;,&quot;Latitud&quot;,&quot;Longitud&quot;,&quot;Costa&quot;,&quot;Dist. capital federal&quot;,&quot;Dist. capital estatal&quot;,&quot;Capital estatal&quot;),
+  dep.var.labels = c(&quot;Gasto Educación/Cultura&quot;,&quot;Gasto Salud/Saneamiento&quot;,
+                     &quot;Gasto Transporte&quot;,&quot;Gasto Asistencia Social&quot;),
+  covariate.labels = c(&quot;Ingresos (IV)&quot;,&quot;Latitud&quot;,&quot;Longitud&quot;,&quot;Costa&quot;,
+                       &quot;Dist. cap. federal&quot;,&quot;Dist. cap. estatal&quot;,&quot;Capital estatal&quot;),
   omit = &quot;factor\\(state\\)|\\(Intercept\\)&quot;, omit.labels = &quot;Dummies de estado&quot;,
   star.cutoffs = c(.10,.05,.01), digits = 3,
   title = &quot;Segunda etapa (IV): ingresos instrumentados y gastos por función&quot;,
-  notes = &quot;Errores estándar robustos agrupados por estado entre paréntesis.&quot;
+  notes = &quot;Errores estándar robustos agrupados por estado entre paréntesis.&quot;,
+  font.size = &quot;scriptsize&quot;
 )</code></pre>
 <pre><code>## 
 ## % Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
-## % Date and time: vie, sept. 05, 2025 - 8:12:41 p. m.
+## % Date and time: vie, sept. 05, 2025 - 9:16:48 p. m.
 ## \begin{table}[!htbp] \centering 
 ##   \caption{Segunda etapa (IV): ingresos instrumentados y gastos por función} 
 ##   \label{} 
+## \scriptsize 
 ## \begin{tabular}{@{\extracolsep{5pt}}lcccc} 
 ## \\[-1.8ex]\hline 
 ## \hline \\[-1.8ex] 
@@ -824,10 +824,10 @@ stargazer(
 ##  Costa &amp;  &amp;  &amp;  &amp;  \\ 
 ##   &amp;  &amp;  &amp;  &amp;  \\ 
 ##   &amp; &amp; &amp; &amp; \\ 
-##  Dist. capital federal &amp; $-$0.027 &amp; $-$0.090$^{**}$ &amp; $-$0.049 &amp; 0.012 \\ 
+##  Dist. cap. federal &amp; $-$0.027 &amp; $-$0.090$^{**}$ &amp; $-$0.049 &amp; 0.012 \\ 
 ##   &amp; (0.048) &amp; (0.042) &amp; (0.044) &amp; (0.045) \\ 
 ##   &amp; &amp; &amp; &amp; \\ 
-##  Dist. capital estatal &amp; 0.033 &amp; 0.032 &amp; 0.002 &amp; 0.022 \\ 
+##  Dist. cap. estatal &amp; 0.033 &amp; 0.032 &amp; 0.002 &amp; 0.022 \\ 
 ##   &amp; (0.055) &amp; (0.028) &amp; (0.056) &amp; (0.039) \\ 
 ##   &amp; &amp; &amp; &amp; \\ 
 ##  Capital estatal &amp; $-$6.907 &amp; 17.773 &amp; $-$25.221 &amp; 53.113$^{***}$ \\ 
@@ -912,50 +912,41 @@ se_classrooms &lt;- sqrt(diag(vcovCL(m_classrooms, cluster = ~ state, type = &qu
 #Tabulación forma reducida
 stargazer(
   m_nofav, m_classrooms,
-  type             = &quot;latex&quot;,   
+  type             = &quot;text&quot;,   
   se               = list(se_nofav, se_classrooms),
   dep.var.labels   = c(&quot;No-favelas&quot;, &quot;Salones por millón de habitantes&quot;),
-  covariate.labels = c(&quot;Producción de petróleo per cápita (instrumento)&quot;),
+  covariate.labels = c(&quot;Producción de petróleo per cápita&quot;),
   keep             = &quot;^oil_pc$&quot;,
   omit             = &quot;factor\\(state_id\\)|lat|lon|coast|dist_fedcap|dist_statecap|state_cap|Intercept&quot;,
   omit.labels      = &quot;Controles y efectos fijos&quot;,
   star.cutoffs     = c(.10,.05,.01),
   digits           = 3,
-  title            = &quot;Forma reducida: efecto del petróleo sobre indicadores de bienestar&quot;,
+  title            = &quot;Efecto del petróleo sobre indicadores de bienestar&quot;,
   notes            = &quot;Errores estándar robustos agrupados por estado entre paréntesis. Modelos incluyen controles geográficos y efectos fijos de estado.&quot;,
   notes.align      = &quot;l&quot;
 )</code></pre>
 <pre><code>## 
-## % Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
-## % Date and time: vie, sept. 05, 2025 - 8:12:41 p. m.
-## \begin{table}[!htbp] \centering 
-##   \caption{Forma reducida: efecto del petróleo sobre indicadores de bienestar} 
-##   \label{} 
-## \begin{tabular}{@{\extracolsep{5pt}}lcc} 
-## \\[-1.8ex]\hline 
-## \hline \\[-1.8ex] 
-##  &amp; \multicolumn{2}{c}{\textit{Dependent variable:}} \\ 
-## \cline{2-3} 
-## \\[-1.8ex] &amp; No-favelas &amp; Salones por millón de habitantes \\ 
-## \\[-1.8ex] &amp; (1) &amp; (2)\\ 
-## \hline \\[-1.8ex] 
-##  Producción de petróleo per cápita (instrumento) &amp; $-$0.0005$^{***}$ &amp; 0.00000$^{**}$ \\ 
-##   &amp; (0.00004) &amp; (0.00000) \\ 
-##   &amp; &amp; \\ 
-## \hline \\[-1.8ex] 
-## Controles y efectos fijos &amp; Yes &amp; Yes \\ 
-## \hline \\[-1.8ex] 
-## Observations &amp; 149 &amp; 149 \\ 
-## R$^{2}$ &amp; 0.275 &amp; 0.454 \\ 
-## Adjusted R$^{2}$ &amp; 0.148 &amp; 0.358 \\ 
-## Residual Std. Error (df = 126) &amp; 5.015 &amp; 0.002 \\ 
-## F Statistic (df = 22; 126) &amp; 2.169$^{***}$ &amp; 4.755$^{***}$ \\ 
-## \hline 
-## \hline \\[-1.8ex] 
-## \textit{Note:}  &amp; \multicolumn{2}{l}{$^{*}$p$&lt;$0.1; $^{**}$p$&lt;$0.05; $^{***}$p$&lt;$0.01} \\ 
-##  &amp; \multicolumn{2}{l}{Errores estándar robustos agrupados por estado entre paréntesis. Modelos incluyen controles geográficos y efectos fijos de estado.} \\ 
-## \end{tabular} 
-## \end{table}</code></pre>
+## Efecto del petróleo sobre indicadores de bienestar
+## =====================================================================================================================================================================
+##                                                                                           Dependent variable:                                                        
+##                                   -----------------------------------------------------------------------------------------------------------------------------------
+##                                                              No-favelas                                             Salones por millón de habitantes                 
+##                                                                  (1)                                                               (2)                               
+## ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+## Producción de petróleo per cápita                            -0.0005***                                                         0.00000**                            
+##                                                               (0.00004)                                                         (0.00000)                            
+##                                                                                                                                                                      
+## ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+## Controles y efectos fijos                                        Yes                                                               Yes                               
+## ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+## Observations                                                     149                                                               149                               
+## R2                                                              0.275                                                             0.454                              
+## Adjusted R2                                                     0.148                                                             0.358                              
+## Residual Std. Error (df = 126)                                  5.015                                                             0.002                              
+## F Statistic (df = 22; 126)                                    2.169***                                                          4.755***                             
+## =====================================================================================================================================================================
+## Note:                             *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01                                                                                                        
+##                                   Errores estándar robustos agrupados por estado entre paréntesis. Modelos incluyen controles geográficos y efectos fijos de estado.</code></pre>
 <p>El coeficiente estimado de –0.0005 implica que, por cada aumento de
 una unidad en la producción de petróleo per cápita, la proporción de
 personas que no viven en favelas disminuye en 0.05 puntos porcentuales.

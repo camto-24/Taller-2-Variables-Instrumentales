@@ -3,8 +3,9 @@ title: "Taller 2- Evaluación de impacto"
 author: "Camila Caraballo, Laura Rivera"
 date: "2025-09-2"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: 
+    latex_engine: xelatex
 editor_options:
   markdown:
     wrap: 72
@@ -21,11 +22,7 @@ editor_options:
 #install.packages("dplyr")
 #install.packages("ggplot2")
 #install.packages("modelsummary")
-install.packages("knitr")
-install.packages("xfun")
 library(knitr)
-install.packages("tinytex")
-tinytex::install_tinytex()
 library(haven)
 library(plm)
 library(scales)
@@ -38,7 +35,6 @@ library(lmtest)
 library(sandwich)
 library(tidyverse)
 library(stargazer)
-library(dplyr) 
 
 # Leer archivo .dta
 data <- read_dta("oil_windfall_sin10perc.dta")
@@ -203,17 +199,25 @@ ses   <- ct[idx, "Std. Error"]
 #Tabulación de los resultados 
 stargazer(
   prim_et,
-  type = "latex",                    
+  type = "text",
   coef = list(betas),
   se   = list(ses),
-  keep = paste0("^(", paste(vars_keep, collapse="|"), ")$"),
+  keep = paste0("^(", paste(vars_keep, collapse = "|"), ")$"),
   dep.var.labels   = "Ingresos municipales",
-  covariate.labels = c("Producción de petróleo","Latitud","Longitud",
-                       "Dummy costa","Dist. capital federal","Dist. capital estatal","Dummy capital estatal"),
+  covariate.labels = c("Producción de petróleo",
+                       "Latitud",
+                       "Longitud",
+                       "Dummy costa",
+                       "Dist. capital federal",
+                       "Dist. capital estatal",
+                       "Dummy capital estatal"),
   omit             = "factor\\(state_id\\)|\\(Intercept\\)",
-  star.cutoffs     = c(.10,.05,.01),
+  star.cutoffs     = c(.10, .05, .01),
   digits           = 3,
-  title            = "Primera etapa: ingresos municipales sobre producción petrolera y controles"
+  title            = "Primera etapa: ingresos municipales sobre producción petrolera y controles",
+  notes            = "Errores estándar robustos agrupados por estado entre paréntesis.",
+  font.size        = "scriptsize",
+  table.align      = "center"
 )
 
 ```
@@ -282,16 +286,29 @@ ses <- lapply(list(m_edu_iv,m_salud_iv,m_urb_iv,m_trans_iv,m_soc_iv), function(m
 
 #Presentación de resultados en tabla
 stargazer(
-  m_edu_iv,m_salud_iv,m_trans_iv,m_soc_iv,
-  type = "latex", se = ses,
-  dep.var.labels = c("Gasto Educación/Cultura","Gasto Salud/Saneamiento","Gasto Transporte","Gasto Asistencia Social"),
-  covariate.labels = c("Ingresos (IV)","Latitud","Longitud","Costa","Dist. capital federal","Dist. capital estatal","Capital estatal"),
-  omit = "factor\\(state\\)|\\(Intercept\\)", omit.labels = "Dummies de estado",
-  star.cutoffs = c(.10,.05,.01), digits = 3,
-  title = "Segunda etapa (IV): ingresos instrumentados y gastos por función",
-  notes = "Errores estándar robustos agrupados por estado entre paréntesis."
+  m_edu_iv, m_salud_iv, m_trans_iv, m_soc_iv,
+  type = "latex", 
+  se = list(ses),
+  dep.var.labels = c("Gasto Educación/Cultura",
+                     "Gasto Salud/Saneamiento",
+                     "Gasto Transporte",
+                     "Gasto Asistencia Social"),
+  covariate.labels = c("Ingresos (IV)",
+                       "Latitud",
+                       "Longitud",
+                       "Costa",
+                       "Dist. capital federal",
+                       "Dist. capital estatal",
+                       "Capital estatal"),
+  omit = "factor\\(state\\)|\\(Intercept\\)", 
+  omit.labels = "Dummies de estado",
+  star.cutoffs = c(.10, .05, .01), 
+  digits = 3,
+  title = "Segunda etapa: ingresos instrumentados y gastos por función",
+  notes = "Errores estándar robustos agrupados por estado entre paréntesis.",
+  font.size = "scriptsize",
+  table.align = "center"
 )
-
 
 ```
 
@@ -355,16 +372,17 @@ se_classrooms <- sqrt(diag(vcovCL(m_classrooms, cluster = ~ state, type = "HC1")
 #Tabulación forma reducida
 stargazer(
   m_nofav, m_classrooms,
-  type             = "latex",   
+  type             = "text",   
   se               = list(se_nofav, se_classrooms),
   dep.var.labels   = c("No-favelas", "Salones por millón de habitantes"),
-  covariate.labels = c("Producción de petróleo per cápita (instrumento)"),
+  covariate.labels = c("Producción de petróleo per cápita"),
   keep             = "^oil_pc$",
   omit             = "factor\\(state_id\\)|lat|lon|coast|dist_fedcap|dist_statecap|state_cap|Intercept",
   omit.labels      = "Controles y efectos fijos",
   star.cutoffs     = c(.10,.05,.01),
+  table.align = "center",
   digits           = 3,
-  title            = "Forma reducida: efecto del petróleo sobre indicadores de bienestar",
+  title            = "Efecto del petróleo sobre indicadores de bienestar",
   notes            = "Errores estándar robustos agrupados por estado entre paréntesis. Modelos incluyen controles geográficos y efectos fijos de estado.",
   notes.align      = "l"
 )
