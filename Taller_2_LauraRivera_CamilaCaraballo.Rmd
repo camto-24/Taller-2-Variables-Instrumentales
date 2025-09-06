@@ -21,8 +21,10 @@ editor_options:
 #install.packages("dplyr")
 #install.packages("ggplot2")
 #install.packages("modelsummary")
-
-
+install.packages("knitr")
+library(knitr)
+install.packages("tinytex")
+tinytex::install_tinytex()
 library(haven)
 library(plm)
 library(scales)
@@ -35,6 +37,7 @@ library(lmtest)
 library(sandwich)
 library(tidyverse)
 library(stargazer)
+library(dplyr) 
 
 # Leer archivo .dta
 data <- read_dta("oil_windfall_sin10perc.dta")
@@ -199,7 +202,7 @@ ses   <- ct[idx, "Std. Error"]
 #Tabulación de los resultados 
 stargazer(
   prim_et,
-  type = "html",                    
+  type = "latex",                    
   coef = list(betas),
   se   = list(ses),
   keep = paste0("^(", paste(vars_keep, collapse="|"), ")$"),
@@ -279,7 +282,7 @@ ses <- lapply(list(m_edu_iv,m_salud_iv,m_urb_iv,m_trans_iv,m_soc_iv), function(m
 #Presentación de resultados en tabla
 stargazer(
   m_edu_iv,m_salud_iv,m_trans_iv,m_soc_iv,
-  type = "html", se = ses,
+  type = "latex", se = ses,
   dep.var.labels = c("Gasto Educación/Cultura","Gasto Salud/Saneamiento","Gasto Transporte","Gasto Asistencia Social"),
   covariate.labels = c("Ingresos (IV)","Latitud","Longitud","Costa","Dist. capital federal","Dist. capital estatal","Capital estatal"),
   omit = "factor\\(state\\)|\\(Intercept\\)", omit.labels = "Dummies de estado",
@@ -351,7 +354,7 @@ se_classrooms <- sqrt(diag(vcovCL(m_classrooms, cluster = ~ state, type = "HC1")
 #Tabulación forma reducida
 stargazer(
   m_nofav, m_classrooms,
-  type             = "html",   
+  type             = "latex",   
   se               = list(se_nofav, se_classrooms),
   dep.var.labels   = c("No-favelas", "Salones por millón de habitantes"),
   covariate.labels = c("Producción de petróleo per cápita (instrumento)"),

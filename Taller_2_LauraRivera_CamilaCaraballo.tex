@@ -525,7 +525,7 @@ magistral.}\label{en-una-tabla-presenten-los-resultados-de-estimar-la-primera-et
 \CommentTok{\#Tabulación de los resultados }
 \FunctionTok{stargazer}\NormalTok{(}
 \NormalTok{  prim\_et,}
-  \AttributeTok{type =} \StringTok{"html"}\NormalTok{,                    }
+  \AttributeTok{type =} \StringTok{"latex"}\NormalTok{,                    }
   \AttributeTok{coef =} \FunctionTok{list}\NormalTok{(betas),}
   \AttributeTok{se   =} \FunctionTok{list}\NormalTok{(ses),}
   \AttributeTok{keep =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"\^{}("}\NormalTok{, }\FunctionTok{paste}\NormalTok{(vars\_keep, }\AttributeTok{collapse=}\StringTok{"|"}\NormalTok{), }\StringTok{")$"}\NormalTok{),}
@@ -542,38 +542,50 @@ magistral.}\label{en-una-tabla-presenten-los-resultados-de-estimar-la-primera-et
 
 \begin{verbatim}
 ## 
-## <table style="text-align:center"><caption><strong>Primera etapa: ingresos municipales sobre producción petrolera y controles</strong></caption>
-## <tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td><em>Dependent variable:</em></td></tr>
-## <tr><td></td><td colspan="1" style="border-bottom: 1px solid black"></td></tr>
-## <tr><td style="text-align:left"></td><td>Ingresos municipales</td></tr>
-## <tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Producción de petróleo</td><td>0.035<sup>***</sup></td></tr>
-## <tr><td style="text-align:left"></td><td>(0.002)</td></tr>
-## <tr><td style="text-align:left"></td><td></td></tr>
-## <tr><td style="text-align:left">Latitud</td><td>55.510<sup>*</sup></td></tr>
-## <tr><td style="text-align:left"></td><td>(28.647)</td></tr>
-## <tr><td style="text-align:left"></td><td></td></tr>
-## <tr><td style="text-align:left">Longitud</td><td>38.294</td></tr>
-## <tr><td style="text-align:left"></td><td>(43.702)</td></tr>
-## <tr><td style="text-align:left"></td><td></td></tr>
-## <tr><td style="text-align:left">Dummy costa</td><td></td></tr>
-## <tr><td style="text-align:left"></td><td></td></tr>
-## <tr><td style="text-align:left"></td><td></td></tr>
-## <tr><td style="text-align:left">Dist. capital federal</td><td>-0.282</td></tr>
-## <tr><td style="text-align:left"></td><td>(0.239)</td></tr>
-## <tr><td style="text-align:left"></td><td></td></tr>
-## <tr><td style="text-align:left">Dist. capital estatal</td><td>0.241</td></tr>
-## <tr><td style="text-align:left"></td><td>(0.280)</td></tr>
-## <tr><td style="text-align:left"></td><td></td></tr>
-## <tr><td style="text-align:left">Dummy capital estatal</td><td>342.259<sup>***</sup></td></tr>
-## <tr><td style="text-align:left"></td><td>(118.171)</td></tr>
-## <tr><td style="text-align:left"></td><td></td></tr>
-## <tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>141</td></tr>
-## <tr><td style="text-align:left">R<sup>2</sup></td><td>0.672</td></tr>
-## <tr><td style="text-align:left">Adjusted R<sup>2</sup></td><td>0.611</td></tr>
-## <tr><td style="text-align:left">Residual Std. Error</td><td>194.287 (df = 118)</td></tr>
-## <tr><td style="text-align:left">F Statistic</td><td>10.983<sup>***</sup> (df = 22; 118)</td></tr>
-## <tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
-## </table>
+## % Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+## % Date and time: vie, sept. 05, 2025 - 8:13:07 p. m.
+## \begin{table}[!htbp] \centering 
+##   \caption{Primera etapa: ingresos municipales sobre producción petrolera y controles} 
+##   \label{} 
+## \begin{tabular}{@{\extracolsep{5pt}}lc} 
+## \\[-1.8ex]\hline 
+## \hline \\[-1.8ex] 
+##  & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+## \cline{2-2} 
+## \\[-1.8ex] & Ingresos municipales \\ 
+## \hline \\[-1.8ex] 
+##  Producción de petróleo & 0.035$^{***}$ \\ 
+##   & (0.002) \\ 
+##   & \\ 
+##  Latitud & 55.510$^{*}$ \\ 
+##   & (28.647) \\ 
+##   & \\ 
+##  Longitud & 38.294 \\ 
+##   & (43.702) \\ 
+##   & \\ 
+##  Dummy costa &  \\ 
+##   &  \\ 
+##   & \\ 
+##  Dist. capital federal & $-$0.282 \\ 
+##   & (0.239) \\ 
+##   & \\ 
+##  Dist. capital estatal & 0.241 \\ 
+##   & (0.280) \\ 
+##   & \\ 
+##  Dummy capital estatal & 342.259$^{***}$ \\ 
+##   & (118.171) \\ 
+##   & \\ 
+## \hline \\[-1.8ex] 
+## Observations & 141 \\ 
+## R$^{2}$ & 0.672 \\ 
+## Adjusted R$^{2}$ & 0.611 \\ 
+## Residual Std. Error & 194.287 (df = 118) \\ 
+## F Statistic & 10.983$^{***}$ (df = 22; 118) \\ 
+## \hline 
+## \hline \\[-1.8ex] 
+## \textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+## \end{tabular} 
+## \end{table}
 \end{verbatim}
 
 Los resultados de esta primera etapa muestran que la producción de
@@ -645,7 +657,7 @@ Sociales.}\label{en-una-tabla-presenten-e-interpreten-los-resultados-de-estimar-
 \CommentTok{\#Presentación de resultados en tabla}
 \FunctionTok{stargazer}\NormalTok{(}
 \NormalTok{  m\_edu\_iv,m\_salud\_iv,m\_trans\_iv,m\_soc\_iv,}
-  \AttributeTok{type =} \StringTok{"html"}\NormalTok{, }\AttributeTok{se =}\NormalTok{ ses,}
+  \AttributeTok{type =} \StringTok{"latex"}\NormalTok{, }\AttributeTok{se =}\NormalTok{ ses,}
   \AttributeTok{dep.var.labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Gasto Educación/Cultura"}\NormalTok{,}\StringTok{"Gasto Salud/Saneamiento"}\NormalTok{,}\StringTok{"Gasto Transporte"}\NormalTok{,}\StringTok{"Gasto Asistencia Social"}\NormalTok{),}
   \AttributeTok{covariate.labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Ingresos (IV)"}\NormalTok{,}\StringTok{"Latitud"}\NormalTok{,}\StringTok{"Longitud"}\NormalTok{,}\StringTok{"Costa"}\NormalTok{,}\StringTok{"Dist. capital federal"}\NormalTok{,}\StringTok{"Dist. capital estatal"}\NormalTok{,}\StringTok{"Capital estatal"}\NormalTok{),}
   \AttributeTok{omit =} \StringTok{"factor}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{(state}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{)|}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{(Intercept}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{)"}\NormalTok{, }\AttributeTok{omit.labels =} \StringTok{"Dummies de estado"}\NormalTok{,}
@@ -658,43 +670,56 @@ Sociales.}\label{en-una-tabla-presenten-e-interpreten-los-resultados-de-estimar-
 
 \begin{verbatim}
 ## 
-## <table style="text-align:center"><caption><strong>Segunda etapa (IV): ingresos instrumentados y gastos por función</strong></caption>
-## <tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="4"><em>Dependent variable:</em></td></tr>
-## <tr><td></td><td colspan="4" style="border-bottom: 1px solid black"></td></tr>
-## <tr><td style="text-align:left"></td><td>Gasto Educación/Cultura</td><td>Gasto Salud/Saneamiento</td><td>Gasto Transporte</td><td>Gasto Asistencia Social</td></tr>
-## <tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td><td>(3)</td><td>(4)</td></tr>
-## <tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Ingresos (IV)</td><td>0.139<sup>***</sup></td><td>0.109<sup>***</sup></td><td>0.123<sup>***</sup></td><td>0.052<sup>***</sup></td></tr>
-## <tr><td style="text-align:left"></td><td>(0.006)</td><td>(0.005)</td><td>(0.014)</td><td>(0.005)</td></tr>
-## <tr><td style="text-align:left"></td><td></td><td></td><td></td><td></td></tr>
-## <tr><td style="text-align:left">Latitud</td><td>4.708</td><td>-1.942</td><td>0.248</td><td>1.919</td></tr>
-## <tr><td style="text-align:left"></td><td>(5.242)</td><td>(2.972)</td><td>(4.758)</td><td>(3.622)</td></tr>
-## <tr><td style="text-align:left"></td><td></td><td></td><td></td><td></td></tr>
-## <tr><td style="text-align:left">Longitud</td><td>6.595</td><td>0.036</td><td>-6.448</td><td>0.623</td></tr>
-## <tr><td style="text-align:left"></td><td>(5.730)</td><td>(3.036)</td><td>(7.160)</td><td>(4.159)</td></tr>
-## <tr><td style="text-align:left"></td><td></td><td></td><td></td><td></td></tr>
-## <tr><td style="text-align:left">Costa</td><td></td><td></td><td></td><td></td></tr>
-## <tr><td style="text-align:left"></td><td></td><td></td><td></td><td></td></tr>
-## <tr><td style="text-align:left"></td><td></td><td></td><td></td><td></td></tr>
-## <tr><td style="text-align:left">Dist. capital federal</td><td>-0.027</td><td>-0.090<sup>**</sup></td><td>-0.049</td><td>0.012</td></tr>
-## <tr><td style="text-align:left"></td><td>(0.048)</td><td>(0.042)</td><td>(0.044)</td><td>(0.045)</td></tr>
-## <tr><td style="text-align:left"></td><td></td><td></td><td></td><td></td></tr>
-## <tr><td style="text-align:left">Dist. capital estatal</td><td>0.033</td><td>0.032</td><td>0.002</td><td>0.022</td></tr>
-## <tr><td style="text-align:left"></td><td>(0.055)</td><td>(0.028)</td><td>(0.056)</td><td>(0.039)</td></tr>
-## <tr><td style="text-align:left"></td><td></td><td></td><td></td><td></td></tr>
-## <tr><td style="text-align:left">Capital estatal</td><td>-6.907</td><td>17.773</td><td>-25.221</td><td>53.113<sup>***</sup></td></tr>
-## <tr><td style="text-align:left"></td><td>(15.521)</td><td>(25.609)</td><td>(28.563)</td><td>(14.478)</td></tr>
-## <tr><td style="text-align:left"></td><td></td><td></td><td></td><td></td></tr>
-## <tr><td style="text-align:left">Constant</td><td>-88.719</td><td>137.156</td><td>259.969</td><td>-29.490</td></tr>
-## <tr><td style="text-align:left"></td><td>(186.855)</td><td>(108.802)</td><td>(293.984)</td><td>(157.680)</td></tr>
-## <tr><td style="text-align:left"></td><td></td><td></td><td></td><td></td></tr>
-## <tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Dummies de estado</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
-## <tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>141</td><td>141</td><td>141</td><td>141</td></tr>
-## <tr><td style="text-align:left">R<sup>2</sup></td><td>0.750</td><td>0.715</td><td>0.521</td><td>0.604</td></tr>
-## <tr><td style="text-align:left">Adjusted R<sup>2</sup></td><td>0.703</td><td>0.662</td><td>0.432</td><td>0.530</td></tr>
-## <tr><td style="text-align:left">Residual Std. Error (df = 118)</td><td>40.005</td><td>30.667</td><td>31.476</td><td>20.257</td></tr>
-## <tr><td colspan="5" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="4" style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
-## <tr><td style="text-align:left"></td><td colspan="4" style="text-align:right">Errores estándar robustos agrupados por estado entre paréntesis.</td></tr>
-## </table>
+## % Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+## % Date and time: vie, sept. 05, 2025 - 8:13:07 p. m.
+## \begin{table}[!htbp] \centering 
+##   \caption{Segunda etapa (IV): ingresos instrumentados y gastos por función} 
+##   \label{} 
+## \begin{tabular}{@{\extracolsep{5pt}}lcccc} 
+## \\[-1.8ex]\hline 
+## \hline \\[-1.8ex] 
+##  & \multicolumn{4}{c}{\textit{Dependent variable:}} \\ 
+## \cline{2-5} 
+## \\[-1.8ex] & Gasto Educación/Cultura & Gasto Salud/Saneamiento & Gasto Transporte & Gasto Asistencia Social \\ 
+## \\[-1.8ex] & (1) & (2) & (3) & (4)\\ 
+## \hline \\[-1.8ex] 
+##  Ingresos (IV) & 0.139$^{***}$ & 0.109$^{***}$ & 0.123$^{***}$ & 0.052$^{***}$ \\ 
+##   & (0.006) & (0.005) & (0.014) & (0.005) \\ 
+##   & & & & \\ 
+##  Latitud & 4.708 & $-$1.942 & 0.248 & 1.919 \\ 
+##   & (5.242) & (2.972) & (4.758) & (3.622) \\ 
+##   & & & & \\ 
+##  Longitud & 6.595 & 0.036 & $-$6.448 & 0.623 \\ 
+##   & (5.730) & (3.036) & (7.160) & (4.159) \\ 
+##   & & & & \\ 
+##  Costa &  &  &  &  \\ 
+##   &  &  &  &  \\ 
+##   & & & & \\ 
+##  Dist. capital federal & $-$0.027 & $-$0.090$^{**}$ & $-$0.049 & 0.012 \\ 
+##   & (0.048) & (0.042) & (0.044) & (0.045) \\ 
+##   & & & & \\ 
+##  Dist. capital estatal & 0.033 & 0.032 & 0.002 & 0.022 \\ 
+##   & (0.055) & (0.028) & (0.056) & (0.039) \\ 
+##   & & & & \\ 
+##  Capital estatal & $-$6.907 & 17.773 & $-$25.221 & 53.113$^{***}$ \\ 
+##   & (15.521) & (25.609) & (28.563) & (14.478) \\ 
+##   & & & & \\ 
+##  Constant & $-$88.719 & 137.156 & 259.969 & $-$29.490 \\ 
+##   & (186.855) & (108.802) & (293.984) & (157.680) \\ 
+##   & & & & \\ 
+## \hline \\[-1.8ex] 
+## Dummies de estado & Yes & Yes & Yes & Yes \\ 
+## \hline \\[-1.8ex] 
+## Observations & 141 & 141 & 141 & 141 \\ 
+## R$^{2}$ & 0.750 & 0.715 & 0.521 & 0.604 \\ 
+## Adjusted R$^{2}$ & 0.703 & 0.662 & 0.432 & 0.530 \\ 
+## Residual Std. Error (df = 118) & 40.005 & 30.667 & 31.476 & 20.257 \\ 
+## \hline 
+## \hline \\[-1.8ex] 
+## \textit{Note:}  & \multicolumn{4}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+##  & \multicolumn{4}{r}{Errores estándar robustos agrupados por estado entre paréntesis.} \\ 
+## \end{tabular} 
+## \end{table}
 \end{verbatim}
 
 Los resultados de la estimación mediante variables instrumentales
@@ -765,7 +790,7 @@ para la primera variable
 \CommentTok{\#Tabulación forma reducida}
 \FunctionTok{stargazer}\NormalTok{(}
 \NormalTok{  m\_nofav, m\_classrooms,}
-  \AttributeTok{type             =} \StringTok{"html"}\NormalTok{,   }
+  \AttributeTok{type             =} \StringTok{"latex"}\NormalTok{,   }
   \AttributeTok{se               =} \FunctionTok{list}\NormalTok{(se\_nofav, se\_classrooms),}
   \AttributeTok{dep.var.labels   =} \FunctionTok{c}\NormalTok{(}\StringTok{"No{-}favelas"}\NormalTok{, }\StringTok{"Salones por millón de habitantes"}\NormalTok{),}
   \AttributeTok{covariate.labels =} \FunctionTok{c}\NormalTok{(}\StringTok{"Producción de petróleo per cápita (instrumento)"}\NormalTok{),}
@@ -783,23 +808,36 @@ para la primera variable
 
 \begin{verbatim}
 ## 
-## <table style="text-align:center"><caption><strong>Forma reducida: efecto del petróleo sobre indicadores de bienestar</strong></caption>
-## <tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td colspan="2"><em>Dependent variable:</em></td></tr>
-## <tr><td></td><td colspan="2" style="border-bottom: 1px solid black"></td></tr>
-## <tr><td style="text-align:left"></td><td>No-favelas</td><td>Salones por millón de habitantes</td></tr>
-## <tr><td style="text-align:left"></td><td>(1)</td><td>(2)</td></tr>
-## <tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Producción de petróleo per cápita (instrumento)</td><td>-0.0005<sup>***</sup></td><td>0.00000<sup>**</sup></td></tr>
-## <tr><td style="text-align:left"></td><td>(0.00004)</td><td>(0.00000)</td></tr>
-## <tr><td style="text-align:left"></td><td></td><td></td></tr>
-## <tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Controles y efectos fijos</td><td>Yes</td><td>Yes</td></tr>
-## <tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>149</td><td>149</td></tr>
-## <tr><td style="text-align:left">R<sup>2</sup></td><td>0.275</td><td>0.454</td></tr>
-## <tr><td style="text-align:left">Adjusted R<sup>2</sup></td><td>0.148</td><td>0.358</td></tr>
-## <tr><td style="text-align:left">Residual Std. Error (df = 126)</td><td>5.015</td><td>0.002</td></tr>
-## <tr><td style="text-align:left">F Statistic (df = 22; 126)</td><td>2.169<sup>***</sup></td><td>4.755<sup>***</sup></td></tr>
-## <tr><td colspan="3" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td colspan="2" style="text-align:left"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
-## <tr><td style="text-align:left"></td><td colspan="2" style="text-align:left">Errores estándar robustos agrupados por estado entre paréntesis. Modelos incluyen controles geográficos y efectos fijos de estado.</td></tr>
-## </table>
+## % Table created by stargazer v.5.2.3 by Marek Hlavac, Social Policy Institute. E-mail: marek.hlavac at gmail.com
+## % Date and time: vie, sept. 05, 2025 - 8:13:08 p. m.
+## \begin{table}[!htbp] \centering 
+##   \caption{Forma reducida: efecto del petróleo sobre indicadores de bienestar} 
+##   \label{} 
+## \begin{tabular}{@{\extracolsep{5pt}}lcc} 
+## \\[-1.8ex]\hline 
+## \hline \\[-1.8ex] 
+##  & \multicolumn{2}{c}{\textit{Dependent variable:}} \\ 
+## \cline{2-3} 
+## \\[-1.8ex] & No-favelas & Salones por millón de habitantes \\ 
+## \\[-1.8ex] & (1) & (2)\\ 
+## \hline \\[-1.8ex] 
+##  Producción de petróleo per cápita (instrumento) & $-$0.0005$^{***}$ & 0.00000$^{**}$ \\ 
+##   & (0.00004) & (0.00000) \\ 
+##   & & \\ 
+## \hline \\[-1.8ex] 
+## Controles y efectos fijos & Yes & Yes \\ 
+## \hline \\[-1.8ex] 
+## Observations & 149 & 149 \\ 
+## R$^{2}$ & 0.275 & 0.454 \\ 
+## Adjusted R$^{2}$ & 0.148 & 0.358 \\ 
+## Residual Std. Error (df = 126) & 5.015 & 0.002 \\ 
+## F Statistic (df = 22; 126) & 2.169$^{***}$ & 4.755$^{***}$ \\ 
+## \hline 
+## \hline \\[-1.8ex] 
+## \textit{Note:}  & \multicolumn{2}{l}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+##  & \multicolumn{2}{l}{Errores estándar robustos agrupados por estado entre paréntesis. Modelos incluyen controles geográficos y efectos fijos de estado.} \\ 
+## \end{tabular} 
+## \end{table}
 \end{verbatim}
 
 El coeficiente estimado de --0.0005 implica que, por cada aumento de una
