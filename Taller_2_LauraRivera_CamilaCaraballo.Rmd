@@ -2,9 +2,11 @@
 title: "Taller 2- Evaluación de impacto"
 author: "Camila Caraballo, Laura Rivera"
 date: "2025-09-2"
-output: html_document
-editor_options: 
-  markdown: 
+output:
+  pdf_document: default
+  html_document: default
+editor_options:
+  markdown:
     wrap: 72
 ---
 
